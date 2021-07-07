@@ -34,12 +34,7 @@ export class Game {
   }
 
   drawGameOver(text: string) {
-    context.clearRect(
-      canvas.width / 2,
-      canvas.height / 2,
-      canvas.width / 2,
-      canvas.height / 2
-    );
+    context.clearRect(0, 0, canvas.width, canvas.height);
     context.textAlign = "center";
     context.font = "20px Arial";
     context.fillText(text, canvas.width / 2, canvas.height / 2);
@@ -104,7 +99,7 @@ export class Game {
       ball: this.ball,
       collisions: this.collisions,
       player1: this.player1,
-      player2: this.player2
+      player2: this.player2,
     };
   }
 }

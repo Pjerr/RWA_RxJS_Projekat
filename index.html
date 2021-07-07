@@ -7,7 +7,13 @@
     <title>Pong with RxJS</title>
 </head>
 <body>
-    <canvas width="512" height="256" style="background: black;"></canvas>
+    <div class="wrap">
+        <canvas width="512" height="256" style="background: black;"></canvas>
+        <div class="list">
+            <button type="button" id="pokaziPartijuBtn">Pokaži prethodnu partiju</button>
+            <label id="partijaLbl"></label>
+        </div>
+    </div>
     <script src="./dist/bundle.js"></script>
 </body>
 </html>

@@ -4,9 +4,6 @@ import {
   context,
   PADDLE_KEYS_PLAYER_ONE,
   PADDLE_KEYS_PLAYER_TWO,
-  PLAYER_ONE_SCORE_X,
-  PLAYER_SCORE_Y,
-  PLAYER_TWO_SCORE_X,
   TICKER_INTERVAL,
 } from "./constants/constants";
 import { Direction } from "./models/direction";
@@ -22,25 +19,29 @@ import {
   distinctUntilChanged,
   map,
   scan,
+  take,
+  takeUntil,
   withLatestFrom,
 } from "rxjs/operators";
 import { merge } from "rxjs";
 import { Player } from "./core/player";
 import { Game } from "./core/game";
+import { getMatch, setMatch } from "./services/matchService"
+import { PreviousMatch } from "./models/previousMatch";
 
 context.fillStyle = "white";
 
-let collisions:Collisions={
-  player1:false,
-  player2:false,
-  floor:false,
-  ceiling:false,
-  wall:false
+let collisions: Collisions = {
+  player1: false,
+  player2: false,
+  floor: false,
+  ceiling: false,
+  wall: false,
 };
 
 let dir: Direction = {
-  x: (Math.random()) * 2 * (Math.random() < 0.5 ? 1 : -1),
-  y: (Math.random()) * 2 * (Math.random() < 0.5 ? 1 : -1),
+  x: Math.random() * 2.4 * (Math.random() < 0.5 ? 1 : -1),
+  y: Math.random() * 2.4 * (Math.random() < 0.5 ? 1 : -1),
 };
 
 let pos: Position = {
@@ -48,12 +49,12 @@ let pos: Position = {
   y: canvas.height / 2,
 };
 
-let posP1 = {
+let posP1: Position = {
   x: canvas.width - 40,
   y: canvas.height / 2,
 };
 
-let posP2 = {
+let posP2: Position = {
   x: 20,
   y: canvas.height / 2,
 };
@@ -128,36 +129,57 @@ const player2Paddle$ = ticker$.pipe(
   distinctUntilChanged()
 );
 
-let game: Game = new Game(player1,player2,ball,collisions);
+let game: Game = new Game(player1, player2, ball, collisions);
 game.drawTitle();
 game.drawContorls();
 
 const objects$ = ticker$.pipe(
   withLatestFrom(player1Paddle$, player2Paddle$),
-  scan(
-    ({}, [ticker]) =>
-      game.calculateObjects(ticker),
-    INITIAL_OBJECTS
-  )
+  scan(({}, [ticker]) => game.calculateObjects(ticker), INITIAL_OBJECTS)
 );
+
+const goal: number = 1;
+let score1:number;
+let score2:number;
+
+function pokaziPartiju() {
+  const label = document.getElementById("partijaLbl");
+  const btn = document.getElementById("pokaziPartijuBtn");
+  const click = fromEvent(btn, "click").subscribe((nesto) => {
+    getMatch(score1, score2).then(()=>{
+      setTimeout(() => {
+        label.innerHTML = `Player1: ${score1} \n Player2: ${score2}`;
+      }, 1000);
+    });
+  });
+}
+
+pokaziPartiju();
 
 function update([ticker, player1, objects, player2]: any) {
   context.clearRect(0, 0, canvas.width, canvas.height);
-
+  objects.ball.drawBall();
   game.updatePlayer1(player1);
   game.updatePlayer2(player2);
   game.updateScorePlayer1();
   game.updateScorePlayer2();
-  objects.ball.drawBall();
 
-  if (objects.player1.getScore() > 5) {
-    game.drawGameOver("Player 1 wins!");
+  if (objects.player1.getScore() > goal) {
+    score1 = objects.player1.getScore();
+    score2 = objects.player2.getScore();
+    console.log("EVO ME U UPDATE p1",score1, score2);
+    game.drawGameOver("Player 1 wins!\nThe game will reset after 5 sec...");
     play.unsubscribe();
+    setMatch(score1,score2);
   }
 
-  if (objects.player2.getScore() > 5) {
-    game.drawGameOver("Player 2 wins!");
+  if (objects.player2.getScore() > goal) {
+    score1 = objects.player1.getScore();
+    score2 = objects.player2.getScore();
+    console.log("Evo me u update p2",score1, score2);
+    game.drawGameOver("Player 2 wins!\nThe game will reset after 5 sec...");
     play.unsubscribe();
+    setMatch(score1,score2);
   }
 }
 

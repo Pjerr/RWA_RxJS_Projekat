@@ -20,11 +20,11 @@ export class Player {
     this.score++;
   }
 
-  getPositionY(){
+  getPositionY() {
     return this.position.y;
   }
 
-  setPositionY(y:number){
+  setPositionY(y: number) {
     this.position.y = y;
   }
 
@@ -47,7 +47,7 @@ export class Player {
         ball.getBallPositionY() > this.position.y &&
         ball.getBallPositionY() < this.position.y + this.height &&
         ball.getBallPositionX() > context.canvas.width - this.width * 2
-      ) {
+      ){
         console.log("Hit player1");
         let sound = new Sound();
         sound.playerHitSound();
