@@ -1,14 +1,12 @@
-import { PreviousMatch } from "../models/previousMatch";
-
 const axios = require("axios");
 
-export const getMatch = async (score1:number, score2:number) => {
+const label = document.getElementById("partijaLbl");
+
+export const getMatch = async () => {
   await fetch("http://localhost:3000/match/?id=0")
     .then((response) => response.json())
     .then((data) => {
-      score1 = data[0].player1,
-      score2 = data[0].player2,
-      console.log("izlazim iz get", score1, score2);
+      label.innerHTML = `Player1: ${data[0].player1} \n Player2: ${data[0].player2}`;
     });
 };
 

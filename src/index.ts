@@ -26,8 +26,7 @@ import {
 import { merge } from "rxjs";
 import { Player } from "./core/player";
 import { Game } from "./core/game";
-import { getMatch, setMatch } from "./services/matchService"
-import { PreviousMatch } from "./models/previousMatch";
+import { getMatch, setMatch } from "./services/matchService";
 
 context.fillStyle = "white";
 
@@ -138,23 +137,17 @@ const objects$ = ticker$.pipe(
   scan(({}, [ticker]) => game.calculateObjects(ticker), INITIAL_OBJECTS)
 );
 
-const goal: number = 1;
-let score1:number;
-let score2:number;
-
 function pokaziPartiju() {
   const label = document.getElementById("partijaLbl");
   const btn = document.getElementById("pokaziPartijuBtn");
-  const click = fromEvent(btn, "click").subscribe((nesto) => {
-    getMatch(score1, score2).then(()=>{
-      setTimeout(() => {
-        label.innerHTML = `Player1: ${score1} \n Player2: ${score2}`;
-      }, 1000);
-    });
+  const click = fromEvent(btn, "click").subscribe(() => {
+    getMatch();
   });
 }
 
-pokaziPartiju();
+const goal: number = 5;
+let score1: number;
+let score2: number;
 
 function update([ticker, player1, objects, player2]: any) {
   context.clearRect(0, 0, canvas.width, canvas.height);
@@ -167,19 +160,19 @@ function update([ticker, player1, objects, player2]: any) {
   if (objects.player1.getScore() > goal) {
     score1 = objects.player1.getScore();
     score2 = objects.player2.getScore();
-    console.log("EVO ME U UPDATE p1",score1, score2);
+    console.log("EVO ME U UPDATE p1", score1, score2);
     game.drawGameOver("Player 1 wins!\nThe game will reset after 5 sec...");
     play.unsubscribe();
-    setMatch(score1,score2);
+    setMatch(score1, score2);
   }
 
   if (objects.player2.getScore() > goal) {
     score1 = objects.player1.getScore();
     score2 = objects.player2.getScore();
-    console.log("Evo me u update p2",score1, score2);
+    console.log("Evo me u update p2", score1, score2);
     game.drawGameOver("Player 2 wins!\nThe game will reset after 5 sec...");
     play.unsubscribe();
-    setMatch(score1,score2);
+    setMatch(score1, score2);
   }
 }
 
@@ -189,3 +182,5 @@ const play = combineLatest([
   objects$,
   player2Paddle$,
 ]).subscribe(update);
+
+pokaziPartiju();
