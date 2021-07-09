@@ -145,9 +145,7 @@ function pokaziPartiju() {
   });
 }
 
-const goal: number = 5;
-let score1: number;
-let score2: number;
+const goal: number = 4; //igra se do 5
 
 function update([ticker, player1, objects, player2]: any) {
   context.clearRect(0, 0, canvas.width, canvas.height);
@@ -158,21 +156,15 @@ function update([ticker, player1, objects, player2]: any) {
   game.updateScorePlayer2();
 
   if (objects.player1.getScore() > goal) {
-    score1 = objects.player1.getScore();
-    score2 = objects.player2.getScore();
-    console.log("EVO ME U UPDATE p1", score1, score2);
     game.drawGameOver("Player 1 wins!\nThe game will reset after 5 sec...");
     play.unsubscribe();
-    setMatch(score1, score2);
+    setMatch(objects.player1.getScore(), objects.player2.getScore());
   }
 
   if (objects.player2.getScore() > goal) {
-    score1 = objects.player1.getScore();
-    score2 = objects.player2.getScore();
-    console.log("Evo me u update p2", score1, score2);
     game.drawGameOver("Player 2 wins!\nThe game will reset after 5 sec...");
     play.unsubscribe();
-    setMatch(score1, score2);
+    setMatch(objects.player1.getScore(), objects.player2.getScore());
   }
 }
 
