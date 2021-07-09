@@ -46,7 +46,7 @@ export class Player {
       if (
         ball.getBallPositionY() > this.position.y &&
         ball.getBallPositionY() < this.position.y + this.height &&
-        ball.getBallPositionX() > PLAYER_ONE_POSITION_X && ball.getBallPositionX() < PLAYER_ONE_POSITION_X + 5
+        ball.getBallPositionX() > PLAYER_ONE_POSITION_X && ball.getBallPositionX() < PLAYER_ONE_POSITION_X + 10
         // ball.getBallPositionX() > context.canvas.width - this.width * 2 //ovo nije dobro resenje
       ){
         console.log("Hit player1");

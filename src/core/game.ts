@@ -85,9 +85,9 @@ export class Game {
     }
 
     this.collisions.ceiling =
-      this.ball.getBallPositionY() < this.ball.getBallRadius();
+      this.ball.getBallPositionY() < this.ball.getBallRadius() && this.ball.getBallPositionY() > 0;
     this.collisions.floor =
-      this.ball.getBallPositionY() > canvas.height - this.ball.getBallRadius();
+      this.ball.getBallPositionY() > canvas.height - this.ball.getBallRadius() && this.ball.getBallPositionY() < canvas.height;
 
     if (this.collisions.ceiling || this.collisions.floor) {
       let sound = new Sound();
