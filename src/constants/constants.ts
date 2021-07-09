@@ -18,4 +18,4 @@ export const PLAYER_ONE_SCORE_X = canvas.width / 2 + 30;
 export const PLAYER_TWO_SCORE_X = canvas.width / 2 - 30;
 export const PLAYER_SCORE_Y = 20;
 
-export const TICKER_INTERVAL = 17;
+export const TICKER_INTERVAL = 15;

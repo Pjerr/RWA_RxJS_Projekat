@@ -1,5 +1,5 @@
 import { Ball } from "./ball";
-import { context } from "../constants/constants";
+import { context, PLAYER_ONE_POSITION_X, PLAYER_TWO_POSITION_X } from "../constants/constants";
 import { Position } from "../models/position";
 import { Sound } from "../constants/sound";
 
@@ -46,7 +46,8 @@ export class Player {
       if (
         ball.getBallPositionY() > this.position.y &&
         ball.getBallPositionY() < this.position.y + this.height &&
-        ball.getBallPositionX() > context.canvas.width - this.width * 2
+        ball.getBallPositionX() > PLAYER_ONE_POSITION_X && ball.getBallPositionX() < PLAYER_ONE_POSITION_X + 5
+        // ball.getBallPositionX() > context.canvas.width - this.width * 2 //ovo nije dobro resenje
       ){
         console.log("Hit player1");
         let sound = new Sound();
@@ -58,7 +59,7 @@ export class Player {
       if (
         ball.getBallPositionY() > this.position.y &&
         ball.getBallPositionY() < this.position.y + this.height &&
-        ball.getBallPositionX() < this.width * 2
+        ball.getBallPositionX() > PLAYER_TWO_POSITION_X + 20 && ball.getBallPositionX() < PLAYER_TWO_POSITION_X + 25
       ) {
         console.log("hit player 2");
         let sound = new Sound();

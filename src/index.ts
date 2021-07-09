@@ -19,8 +19,6 @@ import {
   distinctUntilChanged,
   map,
   scan,
-  take,
-  takeUntil,
   withLatestFrom,
 } from "rxjs/operators";
 import { merge } from "rxjs";
@@ -39,8 +37,8 @@ let collisions: Collisions = {
 };
 
 let dir: Direction = {
-  x: Math.random() * 2.4 * (Math.random() < 0.5 ? 1 : -1),
-  y: Math.random() * 2.4 * (Math.random() < 0.5 ? 1 : -1),
+  x: (Math.random() < 0.5 ? 1 : -1) * 2,
+  y:0
 };
 
 let pos: Position = {
@@ -134,13 +132,12 @@ game.drawContorls();
 
 const objects$ = ticker$.pipe(
   withLatestFrom(player1Paddle$, player2Paddle$),
-  scan(({}, [ticker]) => game.calculateObjects(ticker), INITIAL_OBJECTS)
+  scan(({}, [ticker]) => game.gameLogic(ticker), INITIAL_OBJECTS)
 );
 
-function pokaziPartiju() {
-  const label = document.getElementById("partijaLbl");
-  const btn = document.getElementById("pokaziPartijuBtn");
-  const click = fromEvent(btn, "click").subscribe(() => {
+function showLatestMatch() {
+  const btn = document.getElementById("showLatestMatchBtn");
+  fromEvent(btn, "click").subscribe(() => {
     getMatch();
   });
 }
@@ -158,13 +155,13 @@ function update([ticker, player1, objects, player2]: any) {
   if (objects.player1.getScore() > goal) {
     game.drawGameOver("Player 1 wins!\nThe game will reset after 5 sec...");
     play.unsubscribe();
-    setMatch(objects.player1.getScore(), objects.player2.getScore());
+    // setMatch(objects.player1.getScore(), objects.player2.getScore());
   }
 
   if (objects.player2.getScore() > goal) {
     game.drawGameOver("Player 2 wins!\nThe game will reset after 5 sec...");
     play.unsubscribe();
-    setMatch(objects.player1.getScore(), objects.player2.getScore());
+    // setMatch(objects.player1.getScore(), objects.player2.getScore());
   }
 }
 
@@ -175,4 +172,4 @@ const play = combineLatest([
   player2Paddle$,
 ]).subscribe(update);
 
-pokaziPartiju();
+showLatestMatch();

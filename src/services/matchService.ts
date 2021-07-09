@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const label = document.getElementById("partijaLbl");
+const label = document.getElementById("showLatestMatchLbl");
 
 export const getMatch = async () => {
   await fetch("http://localhost:3000/match/?id=0")

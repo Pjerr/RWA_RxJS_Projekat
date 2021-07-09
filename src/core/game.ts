@@ -57,7 +57,7 @@ export class Game {
     this.player2.drawScorePlayer(PLAYER_TWO_SCORE_X, PLAYER_SCORE_Y);
   }
 
-  calculateObjects(ticker: any) {
+  gameLogic(ticker: any) {
     this.ball.moveBall(ticker);
 
     this.collisions.player1 = this.player1.hitPlayer(this.ball, 1);
