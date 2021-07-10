@@ -1,19 +1,27 @@
 import { Ball } from "./core/ball";
 import {
+  BALL_RADIUS,
+  BALL_SPEED,
   canvas,
   context,
+  DIRECTION_BALL,
   PADDLE_KEYS_PLAYER_ONE,
   PADDLE_KEYS_PLAYER_TWO,
+  PLAYER_HEIGHT,
+  PLAYER_SPEED,
+  PLAYER_WIDTH,
+  POSITION_BALL,
+  POSITION_PLAYER_ONE,
+  POSITION_PLAYER_TWO,
   TICKER_INTERVAL,
 } from "./constants/constants";
-import { Direction } from "./models/direction";
-import { Position } from "./models/position";
 import { Collisions } from "./models/collisions";
 import {
   animationFrameScheduler,
   combineLatest,
   fromEvent,
   interval,
+  Observable,
 } from "rxjs";
 import {
   distinctUntilChanged,
@@ -25,6 +33,7 @@ import { merge } from "rxjs";
 import { Player } from "./core/player";
 import { Game } from "./core/game";
 import { getMatch, setMatch } from "./services/matchService";
+import { GameObjects } from "./models/game-objects";
 
 context.fillStyle = "white";
 
@@ -36,29 +45,9 @@ let collisions: Collisions = {
   wall: false,
 };
 
-let dir: Direction = {
-  x: (Math.random() < 0.5 ? 1 : -1) * 2,
-  y:0
-};
-
-let pos: Position = {
-  x: canvas.width / 2,
-  y: canvas.height / 2,
-};
-
-let posP1: Position = {
-  x: canvas.width - 40,
-  y: canvas.height / 2,
-};
-
-let posP2: Position = {
-  x: 20,
-  y: canvas.height / 2,
-};
-
-let ball: Ball = new Ball(150, 8, pos, dir);
-let player1: Player = new Player(20, 70, 350, posP1, 0);
-let player2: Player = new Player(20, 70, 350, posP2, 0);
+let ball: Ball = new Ball(BALL_SPEED, BALL_RADIUS, POSITION_BALL, DIRECTION_BALL);
+let player1: Player = new Player(PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_SPEED, POSITION_PLAYER_ONE, 0);
+let player2: Player = new Player(PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_SPEED, POSITION_PLAYER_TWO, 0);
 
 const INITIAL_OBJECTS = {
   ball,
@@ -78,7 +67,7 @@ const ticker$ = interval(TICKER_INTERVAL, animationFrameScheduler).pipe(
   }))
 );
 
-const player1input$ = merge(
+const player1input$:Observable<number> = merge(
   fromEvent(document, "keydown", (event: any) => {
     switch (event.keyCode) {
       case PADDLE_KEYS_PLAYER_ONE.up:
@@ -92,7 +81,7 @@ const player1input$ = merge(
   fromEvent(document, "keyup", () => 0)
 );
 
-const player1Paddle$ = ticker$.pipe(
+const player1Paddle$:Observable<number> = ticker$.pipe(
   withLatestFrom(player1input$),
   scan(
     (position, [ticker, direction]) =>
@@ -102,7 +91,7 @@ const player1Paddle$ = ticker$.pipe(
   distinctUntilChanged()
 );
 
-const player2Input$ = merge(
+const player2Input$:Observable<number> = merge(
   fromEvent(document, "keydown", (event: any) => {
     switch (event.keyCode) {
       case PADDLE_KEYS_PLAYER_TWO.up:
@@ -116,7 +105,7 @@ const player2Input$ = merge(
   fromEvent(document, "keyup", () => 0)
 );
 
-const player2Paddle$ = ticker$.pipe(
+const player2Paddle$:Observable<number> = ticker$.pipe(
   withLatestFrom(player2Input$),
   scan(
     (position, [ticker, directon]) =>
@@ -130,7 +119,7 @@ let game: Game = new Game(player1, player2, ball, collisions);
 game.drawTitle();
 game.drawContorls();
 
-const objects$ = ticker$.pipe(
+const objects$:Observable<GameObjects> = ticker$.pipe(
   withLatestFrom(player1Paddle$, player2Paddle$),
   scan(({}, [ticker]) => game.gameLogic(ticker), INITIAL_OBJECTS)
 );
@@ -155,13 +144,13 @@ function update([ticker, player1, objects, player2]: any) {
   if (objects.player1.getScore() > goal) {
     game.drawGameOver("Player 1 wins!\nThe game will reset after 5 sec...");
     play.unsubscribe();
-    // setMatch(objects.player1.getScore(), objects.player2.getScore());
+    setMatch(objects.player1.getScore(), objects.player2.getScore());
   }
 
   if (objects.player2.getScore() > goal) {
     game.drawGameOver("Player 2 wins!\nThe game will reset after 5 sec...");
     play.unsubscribe();
-    // setMatch(objects.player1.getScore(), objects.player2.getScore());
+    setMatch(objects.player1.getScore(), objects.player2.getScore());
   }
 }
 

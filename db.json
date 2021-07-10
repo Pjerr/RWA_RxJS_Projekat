@@ -1,8 +1,8 @@
 {
   "match": [
     {
-      "player1": 0,
-      "player2": 5,
+      "player1": 5,
+      "player2": 1,
       "id": 0
     }
   ]

@@ -1,12 +1,14 @@
 const axios = require("axios");
 
-const label = document.getElementById("showLatestMatchLbl");
+const labelP1 = document.getElementById("player1Lbl");
+const labelP2 = document.getElementById("player2Lbl")
 
 export const getMatch = async () => {
   await fetch("http://localhost:3000/match/?id=0")
     .then((response) => response.json())
     .then((data) => {
-      label.innerHTML = `Player1: ${data[0].player1} \n Player2: ${data[0].player2}`;
+      labelP1.innerHTML = `Player1: ${data[0].player1}`;
+      labelP2.innerHTML = `Player2: ${data[0].player2}`;
     });
 };
 

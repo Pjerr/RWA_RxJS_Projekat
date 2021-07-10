@@ -1,5 +1,5 @@
 import { Ball } from "./ball";
-import { context, PLAYER_ONE_POSITION_X, PLAYER_TWO_POSITION_X } from "../constants/constants";
+import { context, PLAYER_ONE_POSITION_X, PLAYER_TWO_POSITION_X, PLAYER_WIDTH } from "../constants/constants";
 import { Position } from "../models/position";
 import { Sound } from "../constants/sound";
 
@@ -12,7 +12,7 @@ export class Player {
     private score: number
   ) {}
 
-  getScore() {
+  getScore():number {
     return this.score;
   }
 
@@ -20,7 +20,7 @@ export class Player {
     this.score++;
   }
 
-  getPositionY() {
+  getPositionY():number {
     return this.position.y;
   }
 
@@ -41,12 +41,12 @@ export class Player {
   }
 
   //1-> player 1 || 2->player 2
-  hitPlayer(ball: Ball, playerNo: number) {
+  hitPlayer(ball: Ball, playerNo: number) : boolean {
     if (playerNo == 1) {
       if (
         ball.getBallPositionY() > this.position.y &&
         ball.getBallPositionY() < this.position.y + this.height &&
-        ball.getBallPositionX() > PLAYER_ONE_POSITION_X && ball.getBallPositionX() < PLAYER_ONE_POSITION_X + 10
+        ball.getBallPositionX() > PLAYER_ONE_POSITION_X && ball.getBallPositionX() < PLAYER_ONE_POSITION_X + (PLAYER_WIDTH / 2)
         // ball.getBallPositionX() > context.canvas.width - this.width * 2 //ovo nije dobro resenje
       ){
         console.log("Hit player1");
@@ -59,7 +59,7 @@ export class Player {
       if (
         ball.getBallPositionY() > this.position.y &&
         ball.getBallPositionY() < this.position.y + this.height &&
-        ball.getBallPositionX() > PLAYER_TWO_POSITION_X + 20 && ball.getBallPositionX() < PLAYER_TWO_POSITION_X + 25
+        ball.getBallPositionX() > PLAYER_TWO_POSITION_X + PLAYER_WIDTH && ball.getBallPositionX() < PLAYER_TWO_POSITION_X + PLAYER_WIDTH + 5
       ) {
         console.log("hit player 2");
         let sound = new Sound();
@@ -70,7 +70,7 @@ export class Player {
     return false;
   }
 
-  movePlayer(positionY: number, ticker: any, directionY: number) {
+  movePlayer(positionY: number, ticker: any, directionY: number):number {
     let next = positionY + directionY * ticker.deltaTime * this.speed;
     return Math.max(Math.min(next, context.canvas.height - this.height), 0);
   }

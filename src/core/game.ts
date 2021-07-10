@@ -9,6 +9,7 @@ import {
 } from "../constants/constants";
 import { Collisions } from "../models/collisions";
 import { Sound } from "../constants/sound";
+import { GameObjects } from "../models/game-objects";
 export class Game {
   constructor(
     private player1: Player,
@@ -57,7 +58,7 @@ export class Game {
     this.player2.drawScorePlayer(PLAYER_TWO_SCORE_X, PLAYER_SCORE_Y);
   }
 
-  gameLogic(ticker: any) {
+  gameLogic(ticker: any):GameObjects {
     this.ball.moveBall(ticker);
 
     this.collisions.player1 = this.player1.hitPlayer(this.ball, 1);
