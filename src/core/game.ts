@@ -39,6 +39,12 @@ export class Game {
     context.textAlign = "center";
     context.font = "20px Arial";
     context.fillText(text, canvas.width / 2, canvas.height / 2);
+    context.font = "bold 15px Courier New";
+    context.fillText(
+      "Press any button to restart the game",
+      canvas.width / 2,
+      canvas.height / 2 + 20
+    );
   }
 
   updatePlayer1(posY: number) {

@@ -132,6 +132,9 @@ function showLatestMatch() {
 }
 
 const goal: number = 4; //igra se do 5
+let scoreP1:number = 0;
+let scoreP2:number = 0;
+let gameFinished:boolean = false;
 
 function update([ticker, player1, objects, player2]: any) {
   context.clearRect(0, 0, canvas.width, canvas.height);
@@ -142,15 +145,19 @@ function update([ticker, player1, objects, player2]: any) {
   game.updateScorePlayer2();
 
   if (objects.player1.getScore() > goal) {
-    game.drawGameOver("Player 1 wins!\nThe game will reset after 5 sec...");
+    game.drawGameOver("Player 1 wins!");
     play.unsubscribe();
-    setMatch(objects.player1.getScore(), objects.player2.getScore());
+    gameFinished = true;
+    scoreP1 = objects.player1.getScore();
+    scoreP2 = objects.player2.getScore();
   }
 
   if (objects.player2.getScore() > goal) {
-    game.drawGameOver("Player 2 wins!\nThe game will reset after 5 sec...");
+    game.drawGameOver("Player 2 wins!");
     play.unsubscribe();
-    setMatch(objects.player1.getScore(), objects.player2.getScore());
+    gameFinished = true;
+    scoreP1 = objects.player1.getScore();
+    scoreP2 = objects.player2.getScore();
   }
 }
 
@@ -160,5 +167,11 @@ const play = combineLatest([
   objects$,
   player2Paddle$,
 ]).subscribe(update);
+
+document.onkeypress = async () => {
+  if(gameFinished){
+    await setMatch(scoreP1, scoreP2);
+  }
+};
 
 showLatestMatch();

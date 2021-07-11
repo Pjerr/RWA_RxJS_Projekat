@@ -28,11 +28,11 @@ export const PLAYER_SCORE_Y = 20;
 export const TICKER_INTERVAL = 15;
 
 export const BALL_RADIUS = 8;
-export const BALL_SPEED = 150;
+export const BALL_SPEED = 280;
 
 
 export const DIRECTION_BALL: Direction = {
-  x: (Math.random() < 0.5 ? 1 : -1) * 2,
+  x: (Math.random() < 0.5 ? 1 : -1),
   y:0
 };
 

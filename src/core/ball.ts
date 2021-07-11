@@ -32,12 +32,8 @@ export class Ball {
     this.position.x=canvas.width/2;
     this.position.y=canvas.height/2;
   }
-  setBallDirectionRandom(){
-    this.direction.x=(Math.random()) * 2 * (Math.random() < 0.5 ? 1 : -1);
-    this.direction.y=(Math.random()) * 2 * (Math.random() < 0.5 ? 1 : -1);
-  }
   setBallDirectionRandomY(){
-    this.direction.y=(Math.random()) * 2 * (Math.random() < 0.5 ? 1 : -1);
+    this.direction.y=(Math.random()) * (Math.random() < 0.5 ? 1 : -1);
   }
   bounceX(){
     this.direction.x=-this.direction.x;
